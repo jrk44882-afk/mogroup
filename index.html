@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>مو قروب الشعبة</title>
+<link href="https://fonts.cdnfonts.com/css/29lt-riwaya" rel="stylesheet">
+
+<style>
+  @font-face {
+    font-family: '29LT Riwaya';
+    src: local('29LT Riwaya'), local('29LTRiwaya-Regular');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  :root {
+    --bg-latte: #F4ECE1;
+    --card-cream: #FAF6F0;
+    --brown-light: #D8C7B4;
+    --brown-medium: #9C7A5B;
+    --brown-dark: #4A3728;
+    --text-muted: #7D6857;
+    --danger: #A63A3A;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: '29LT Riwaya', '29LT Riwaya Regular', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    padding: 25px 15px;
+    background-color: var(--bg-latte);
+    color: var(--brown-dark);
+    font-family: '29LT Riwaya', '29LT Riwaya Regular', sans-serif;
+    line-height: 1.7;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .auth-card {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 40px 30px;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .auth-card h2 {
+    font-size: 32px;
+    margin: 0 0 8px 0;
+    font-weight: 700;
+  }
+
+  .auth-card p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  input[type="text"], input[type="password"], select, textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--brown-light);
+    border-radius: 6px;
+    background-color: var(--bg-latte);
+    color: var(--brown-dark);
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 14px;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--brown-medium);
+  }
+
+  .btn-main {
+    background-color: var(--brown-medium);
+    color: #FFFDFB;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-main:hover {
+    background-color: var(--brown-dark);
+  }
+
+  .btn-secondary {
+    background-color: var(--bg-latte);
+    color: var(--brown-dark);
+    border: 1px solid var(--brown-light);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--brown-light);
+  }
+
+  .btn-danger {
+    background-color: transparent;
+    color: var(--danger);
+    border: 1px solid #e0b4b4;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .btn-danger:hover {
+    background-color: var(--danger);
+    color: #fff;
+  }
+
+  .error {
+    color: var(--danger);
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+    padding: 14px 22px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .site-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    background-color: var(--bg-latte);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--brown-light);
+  }
+
+  .navbar {
+    display: flex;
+    gap: 8px;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+  }
+
+  .nav-btn:hover {
+    background-color: var(--bg-latte);
+    color: var(--brown-dark);
+  }
+
+  .nav-btn.active {
+    background-color: var(--brown-medium);
+    color: #FFFDFB;
+    font-weight: 600;
+  }
+
+  .section-container {
+    display: none;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+    border-radius: 10px;
+    padding: 28px;
+  }
+
+  .section-container.active {
+    display: block;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--brown-light);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .section-header h1 {
+    font-size: 32px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .folders-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--brown-light);
+  }
+
+  .folder-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background-color: var(--bg-latte);
+    border: 1px solid var(--brown-light);
+    color: var(--brown-dark);
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .folder-chip.active {
+    background-color: var(--brown-dark);
+    color: var(--card-cream);
+    border-color: var(--brown-dark);
+  }
+
+  .composer-box {
+    background-color: var(--bg-latte);
+    border: 1px solid var(--brown-light);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 28px;
+  }
+
+  .composer-box textarea {
+    background-color: var(--card-cream);
+    resize: vertical;
+    min-height: 75px;
+    margin-bottom: 10px;
+  }
+
+  .composer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .file-label {
+    display: inline-block;
+    padding: 7px 14px;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .file-label input[type="file"] {
+    display: none;
+  }
+
+  .anon-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--brown-dark);
+    cursor: pointer;
+    margin-bottom: 12px;
+    user-select: none;
+  }
+
+  .anon-toggle input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--brown-medium);
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .padlet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+
+  .post-card {
+    background-color: var(--bg-latte);
+    border: 1px solid var(--brown-light);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--brown-light);
+    padding-bottom: 6px;
+  }
+
+  .author-name {
+    font-weight: 700;
+    color: var(--brown-dark);
+  }
+
+  .post-text {
+    font-size: 16px;
+    margin: 0 0 12px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .media-preview {
+    margin-top: 8px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .media-preview img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+  }
+
+  .media-preview video {
+    width: 100%;
+    max-height: 240px;
+    border-radius: 6px;
+    background: #000;
+  }
+
+  .file-attachment {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 8px;
+    text-decoration: none;
+    color: var(--brown-dark);
+  }
+
+  .file-attachment:hover {
+    background-color: var(--brown-light);
+  }
+
+  .mail-item {
+    background-color: var(--bg-latte);
+    border: 1px solid var(--brown-light);
+    border-right: 4px solid var(--brown-medium);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .mail-item.public-mail {
+    border-right-color: var(--brown-dark);
+  }
+
+  .badge-type {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: var(--card-cream);
+    border: 1px solid var(--brown-light);
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px 10px;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div id="gateScreen" class="auth-card">
+    <h2>مو قروب الشعبة</h2>
+    <p>أدخل الرمز العام للوصول إلى بوابة الأعضاء</p>
+    <input type="password" id="gateInput" inputmode="numeric" placeholder="الرمز العام">
+    <button type="button" class="btn-main" onclick="checkGate()">متابعة</button>
+    <p id="gateError" class="error">الرمز العام غير صحيح</p>
+  </div>
+
+  <div id="loginScreen" class="auth-card" style="display: none;">
+    <h2>تسجيل دخول الأعضاء</h2>
+    <p>اختر اسمك من القائمة وأدخل رقمك السري</p>
+    <select id="userSelect">
+      <option value="" disabled selected>-- اختر اسم المستخدم --</option>
+    </select>
+    <input type="password" id="userPassInput" inputmode="numeric" placeholder="كلمة السر (أرقام فقط)">
+    <button type="button" class="btn-main" onclick="loginUser()">دخول إلى حسابي</button>
+    <p id="loginError" class="error">كلمة السر غير صحيحة لهذا المستخدم</p>
+  </div>
+
+  <div id="appScreen" style="display: none;">
+    
+    <header class="top-header">
+      <h1 class="site-title">مو قروب الشعبة</h1>
+      <div class="user-badge">
+        <span>مرحباً، <strong id="currentUserName"></strong></span>
+        <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 13px;" onclick="logoutUser()">تبديل العضو</button>
+      </div>
+    </header>
+
+    <nav class="navbar">
+      <button class="nav-btn active" onclick="switchSection('newspaper', this)">اصدارات الجريدة</button>
+      <button class="nav-btn" onclick="switchSection('events', this)">الفعاليات</button>
+      <button class="nav-btn" onclick="switchSection('achievements', this)">الانجازات</button>
+      <button class="nav-btn" onclick="switchSection('suggestions', this)">الاقتراحات</button>
+      <button class="nav-btn" onclick="switchSection('notes', this)">الملاحظات</button>
+      <button class="nav-btn" onclick="switchSection('mail', this)">البريد</button>
+    </nav>
+
+    <section id="sec-newspaper" class="section-container active">
+      <div class="section-header">
+        <h1>اصدارات الجريدة</h1>
+      </div>
+      <div class="composer-box">
+        <div class="composer-actions">
+          <label class="file-label">
+            <span id="label-newspaper">اختر صورة أو ملف للإصدار...</span>
+            <input type="file" id="file-newspaper" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip" onchange="updateFileLabel('newspaper')">
+          </label>
+          <button type="button" class="btn-main" onclick="addPost('newspaper')">نشر الإصدار</button>
+        </div>
+      </div>
+      <div id="grid-newspaper" class="padlet-grid"></div>
+    </section>
+
+    <section id="sec-events" class="section-container">
+      <div class="section-header">
+        <h1>الفعاليات</h1>
+        <button type="button" class="btn-secondary" onclick="createFolder('events')">+ مجلد جديد</button>
+      </div>
+      <div id="folders-events" class="folders-bar"></div>
+      <div class="composer-box">
+        <textarea id="text-events" placeholder="اكتب تفاصيل الفعالية أو المشاركة هنا..."></textarea>
+        <div class="composer-actions">
+          <label class="file-label">
+            <span id="label-events">إرفاق صورة / فيديو / ملف</span>
+            <input type="file" id="file-events" onchange="updateFileLabel('events')">
+          </label>
+          <button type="button" class="btn-main" onclick="addPost('events')">إرسال المشاركة</button>
+        </div>
+      </div>
+      <div id="grid-events" class="padlet-grid"></div>
+    </section>
+
+    <section id="sec-achievements" class="section-container">
+      <div class="section-header">
+        <h1>الانجازات</h1>
+        <button type="button" class="btn-secondary" onclick="createFolder('achievements')">+ مجلد جديد</button>
+      </div>
+      <div id="folders-achievements" class="folders-bar"></div>
+      <div class="composer-box">
+        <textarea id="text-achievements" placeholder="شارك إنجازاً جديداً..."></textarea>
+        <div class="composer-actions">
+          <label class="file-label">
+            <span id="label-achievements">إرفاق صورة / فيديو / ملف</span>
+            <input type="file" id="file-achievements" onchange="updateFileLabel('achievements')">
+          </label>
+          <button type="button" class="btn-main" onclick="addPost('achievements')">إرسال المشاركة</button>
+        </div>
+      </div>
+      <div id="grid-achievements" class="padlet-grid"></div>
+    </section>
+
+    <section id="sec-suggestions" class="section-container">
+      <div class="section-header">
+        <h1>الاقتراحات</h1>
+        <button type="button" class="btn-secondary" onclick="createFolder('suggestions')">+ مجلد جديد</button>
+      </div>
+      <div id="folders-suggestions" class="folders-bar"></div>
+      <div class="composer-box">
+        <textarea id="text-suggestions" placeholder="اكتب اقتراحك هنا..."></textarea>
+        <div class="composer-actions">
+          <label class="file-label">
+            <span id="label-suggestions">إرفاق صورة / فيديو / ملف</span>
+            <input type="file" id="file-suggestions" onchange="updateFileLabel('suggestions')">
+          </label>
+          <button type="button" class="btn-main" onclick="addPost('suggestions')">إرسال المشاركة</button>
+        </div>
+      </div>
+      <div id="grid-suggestions" class="padlet-grid"></div>
+    </section>
+
+    <section id="sec-notes" class="section-container">
+      <div class="section-header">
+        <h1>الملاحظات</h1>
+        <button type="button" class="btn-secondary" onclick="createFolder('notes')">+ مجلد جديد</button>
+      </div>
+      <div id="folders-notes" class="folders-bar"></div>
+      <div class="composer-box">
+        <textarea id="text-notes" placeholder="اكتب ملاحظتك هنا..."></textarea>
+        <div class="composer-actions">
+          <label class="file-label">
+            <span id="label-notes">إرفاق صورة / فيديو / ملف</span>
+            <input type="file" id="file-notes" onchange="updateFileLabel('notes')">
+          </label>
+          <button type="button" class="btn-main" onclick="addPost('notes')">إرسال المشاركة</button>
+        </div>
+      </div>
+      <div id="grid-notes" class="padlet-grid"></div>
+    </section>
+
+    <section id="sec-mail" class="section-container">
+      <div class="section-header">
+        <h1>البريد</h1>
+      </div>
+
+      <div class="composer-box">
+        <select id="mailRecipient">
+          <option value="ALL">رسالة عامة (تظهر للجميع)</option>
+        </select>
+        <textarea id="text-mail" placeholder="اكتب نص الرسالة هنا..."></textarea>
+        
+        <label class="anon-toggle">
+          <input type="checkbox" id="mailAnonymous">
+          <span>إرسال بدون إظهار اسمي (مرسل مجهول)</span>
+        </label>
+
+        <div class="composer-actions">
+          <label class="file-label">
+            <span id="label-mail">إرفاق صورة / فيديو / ملف</span>
+            <input type="file" id="file-mail" onchange="updateFileLabel('mail')">
+          </label>
+          <button type="button" class="btn-main" onclick="sendMail()">إرسال الرسالة</button>
+        </div>
+      </div>
+
+      <div id="mailList"></div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  const GATE_PASS = "227";
+  const USERS = [
+    { name: "الأميرة النائمة", pass: "9144" },
+    { name: "الملكة الهكر", pass: "2372" },
+    { name: "قاضي فضاة العرب", pass: "2580" },
+    { name: "البزنس وومن", pass: "2661" },
+    { name: "الامبراطورة", pass: "2696" },
+    { name: "أرين", pass: "0958" },
+    { name: "ارجوان", pass: "2609" },
+    { name: "لين", pass: "2860" }
+  ];
+
+  let currentUser = null;
+  let db = null;
+  const activeFolders = {
+    events: "الكل",
+    achievements: "الكل",
+    suggestions: "الكل",
+    notes: "الكل"
+  };
+
+  function initDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open("MoGroupAlshobaDB", 1);
+      request.onupgradeneeded = (e) => {
+        const database = e.target.result;
+        if (!database.objectStoreNames.contains("posts")) {
+          database.createObjectStore("posts", { keyPath: "id", autoIncrement: true });
+        }
+        if (!database.objectStoreNames.contains("folders")) {
+          database.createObjectStore("folders", { keyPath: "id", autoIncrement: true });
+        }
+        if (!database.objectStoreNames.contains("mails")) {
+          database.createObjectStore("mails", { keyPath: "id", autoIncrement: true });
+        }
+      };
+      request.onsuccess = (e) => {
+        db = e.target.result;
+        resolve(db);
+      };
+      request.onerror = (e) => reject(e);
+    });
+  }
+
+  function populateUserLists() {
+    const loginSelect = document.getElementById("userSelect");
+    const mailSelect = document.getElementById("mailRecipient");
+    USERS.forEach(u => {
+      const opt1 = document.createElement("option");
+      opt1.value = u.name;
+      opt1.textContent = u.name;
+      loginSelect.appendChild(opt1);
+
+      const opt2 = document.createElement("option");
+      opt2.value = u.name;
+      opt2.textContent = "خاص إلى: " + u.name;
+      mailSelect.appendChild(opt2);
+    });
+  }
+
+  function checkGate() {
+    const val = document.getElementById("gateInput").value.trim();
+    if (val === GATE_PASS) {
+      localStorage.setItem("gatePassed", "true");
+      document.getElementById("gateScreen").style.display = "none";
+      document.getElementById("loginScreen").style.display = "block";
+    } else {
+      document.getElementById("gateError").style.display = "block";
+    }
+  }
+
+  function loginUser() {
+    const selectedName = document.getElementById("userSelect").value;
+    const enteredPass = document.getElementById("userPassInput").value.trim();
+    const userObj = USERS.find(u => u.name === selectedName && u.pass === enteredPass);
+
+    if (userObj) {
+      currentUser = userObj.name;
+      localStorage.setItem("savedMember", currentUser);
+      enterApp();
+    } else {
+      document.getElementById("loginError").style.display = "block";
+    }
+  }
+
+  function logoutUser() {
+    localStorage.removeItem("savedMember");
+    currentUser = null;
+    document.getElementById("userPassInput").value = "";
+    document.getElementById("loginError").style.display = "none";
+    document.getElementById("appScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display = "block";
+  }
+
+  function enterApp() {
+    document.getElementById("gateScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("appScreen").style.display = "block";
+    document.getElementById("currentUserName").textContent = currentUser;
+    renderAll();
+  }
+
+  function switchSection(secId, btn) {
+    document.querySelectorAll(".section-container").forEach(s => s.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("sec-" + secId).classList.add("active");
+    btn.classList.add("active");
+    if (secId === "mail") renderMails();
+    else renderSection(secId);
+  }
+
+  function updateFileLabel(sec) {
+    const fileInput = document.getElementById("file-" + sec);
+    const labelSpan = document.getElementById("label-" + sec);
+    if (fileInput.files.length > 0) {
+      labelSpan.textContent = fileInput.files[0].name;
+    } else {
+      labelSpan.textContent = sec === "newspaper" ? "اختر صورة أو ملف للإصدار..." : "إرفاق صورة / فيديو / ملف";
+    }
+  }
+
+  function readFileAsDataURL(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({
+        name: file.name,
+        type: file.type,
+        data: reader.result
+      });
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function addPost(section) {
+    const textEl = document.getElementById("text-" + section);
+    const fileEl = document.getElementById("file-" + section);
+    const text = textEl ? textEl.value.trim() : "";
+    const file = fileEl.files[0];
+
+    if (!text && !file) return;
+
+    let fileData = null;
+    if (file) {
+      fileData = await readFileAsDataURL(file);
+    }
+
+    const postObj = {
+      section: section,
+      folder: activeFolders[section] || "الكل",
+      author: currentUser,
+      text: text,
+      file: fileData,
+      date: new Date().toLocaleDateString("ar-SA")
+    };
+
+    const tx = db.transaction("posts", "readwrite");
+    tx.objectStore("posts").add(postObj);
+    tx.oncomplete = () => {
+      if (textEl) textEl.value = "";
+      fileEl.value = "";
+      updateFileLabel(section);
+      renderSection(section);
+    };
+  }
+
+  function deletePost(id, section) {
+    const tx = db.transaction("posts", "readwrite");
+    tx.objectStore("posts").delete(id);
+    tx.oncomplete = () => renderSection(section);
+  }
+
+  function createFolder(section) {
+    const folderName = prompt("أدخل اسم المجلد الجديد:");
+    if (!folderName || !folderName.trim()) return;
+
+    const tx = db.transaction("folders", "readwrite");
+    tx.objectStore("folders").add({ section: section, name: folderName.trim() });
+    tx.oncomplete = () => {
+      activeFolders[section] = folderName.trim();
+      renderSection(section);
+    };
+  }
+
+  function selectFolder(section, folderName) {
+    activeFolders[section] = folderName;
+    renderSection(section);
+  }
+
+  function renderFolders(section) {
+    const container = document.getElementById("folders-" + section);
+    if (!container) return;
+
+    const tx = db.transaction("folders", "readonly");
+    const req = tx.objectStore("folders").getAll();
+    req.onsuccess = () => {
+      const list = req.result.filter(f => f.section === section);
+      container.innerHTML = "";
+
+      const allChip = document.createElement("div");
+      allChip.className = "folder-chip" + (activeFolders[section] === "الكل" ? " active" : "");
+      allChip.textContent = "الكل";
+      allChip.onclick = () => selectFolder(section, "الكل");
+      container.appendChild(allChip);
+
+      list.forEach(f => {
+        const chip = document.createElement("div");
+        chip.className = "folder-chip" + (activeFolders[section] === f.name ? " active" : "");
+        chip.textContent = "📁 " + f.name;
+        chip.onclick = () => selectFolder(section, f.name);
+        container.appendChild(chip);
+      });
+    };
+  }
+
+  function buildMediaHTML(file) {
+    if (!file) return "";
+    if (file.type.startsWith("image/")) {
+      return `<div class="media-preview"><img src="${file.data}" alt="${file.name}"></div>`;
+    }
+    if (file.type.startsWith("video/")) {
+      return `<div class="media-preview"><video controls src="${file.data}"></video></div>`;
+    }
+    return `<a class="file-attachment" href="${file.data}" download="${file.name}"><span>📎 ${file.name}</span><span>تحميل</span></a>`;
+  }
+
+  function renderSection(section) {
+    if (section !== "newspaper") renderFolders(section);
+
+    const grid = document.getElementById("grid-" + section);
+    const tx = db.transaction("posts", "readonly");
+    const req = tx.objectStore("posts").getAll();
+
+    req.onsuccess = () => {
+      let posts = req.result.filter(p => p.section === section);
+      if (section !== "newspaper" && activeFolders[section] !== "الكل") {
+        posts = posts.filter(p => p.folder === activeFolders[section]);
+      }
+      posts.reverse();
+
+      if (posts.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1;">لا توجد مشاركات في هذا القسم حتى الآن.</div>`;
+        return;
+      }
+
+      grid.innerHTML = posts.map(p => `
+        <div class="post-card">
+          <div>
+            <div class="post-meta">
+              <span class="author-name">${p.author}</span>
+              <span>${p.folder && p.folder !== "الكل" ? "📁 " + p.folder + " • " : ""}${p.date}</span>
+            </div>
+            ${p.text ? `<p class="post-text">${p.text}</p>` : ""}
+            ${buildMediaHTML(p.file)}
+          </div>
+          <div style="margin-top: 12px; text-align: left;">
+            <button type="button" class="btn-danger" onclick="deletePost(${p.id}, '${section}')">حذف</button>
+          </div>
+        </div>
+      `).join("");
+    };
+  }
+
+  async function sendMail() {
+    const recipient = document.getElementById("mailRecipient").value;
+    const textEl = document.getElementById("text-mail");
+    const fileEl = document.getElementById("file-mail");
+    const isAnon = document.getElementById("mailAnonymous").checked;
+    const text = textEl.value.trim();
+    const file = fileEl.files[0];
+
+    if (!text && !file) return;
+
+    let fileData = null;
+    if (file) {
+      fileData = await readFileAsDataURL(file);
+    }
+
+    const mailObj = {
+      sender: currentUser,
+      isAnonymous: isAnon,
+      recipient: recipient,
+      text: text,
+      file: fileData,
+      date: new Date().toLocaleDateString("ar-SA")
+    };
+
+    const tx = db.transaction("mails", "readwrite");
+    tx.objectStore("mails").add(mailObj);
+    tx.oncomplete = () => {
+      textEl.value = "";
+      fileEl.value = "";
+      document.getElementById("mailAnonymous").checked = false;
+      updateFileLabel("mail");
+      renderMails();
+    };
+  }
+
+  function deleteMail(id) {
+    const tx = db.transaction("mails", "readwrite");
+    tx.objectStore("mails").delete(id);
+    tx.oncomplete = () => renderMails();
+  }
+
+  function renderMails() {
+    const listEl = document.getElementById("mailList");
+    const tx = db.transaction("mails", "readonly");
+    const req = tx.objectStore("mails").getAll();
+
+    req.onsuccess = () => {
+      const visibleMails = req.result.filter(m =>
+        m.recipient === "ALL" ||
+        m.recipient === currentUser ||
+        m.sender === currentUser
+      ).reverse();
+
+      if (visibleMails.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">صندوق البريد فارغ حالياً.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = visibleMails.map(m => {
+        const isPublic = m.recipient === "ALL";
+        let senderDisplay = m.sender;
+        if (m.isAnonymous) {
+          senderDisplay = (m.sender === currentUser) ? "مجهول (أنت)" : "مجهول";
+        }
+
+        const label = isPublic
+          ? `رسالة عامة من: ${senderDisplay}`
+          : `رسالة خاصة من: ${senderDisplay} ➔ إلى: ${m.recipient}`;
+
+        return `
+          <div class="mail-item ${isPublic ? "public-mail" : ""}">
+            <div class="post-meta">
+              <span><strong>${label}</strong></span>
+              <span class="badge-type">${isPublic ? "عامة" : "خاصة"} • ${m.date}</span>
+            </div>
+            ${m.text ? `<p class="post-text">${m.text}</p>` : ""}
+            ${buildMediaHTML(m.file)}
+            <div style="margin-top: 10px; text-align: left;">
+              <button type="button" class="btn-danger" onclick="deleteMail(${m.id})">حذف</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    };
+  }
+
+  function renderAll() {
+    renderSection("newspaper");
+    renderSection("events");
+    renderSection("achievements");
+    renderSection("suggestions");
+    renderSection("notes");
+    renderMails();
+  }
+
+  document.getElementById("gateInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") checkGate();
+  });
+
+  document.getElementById("userPassInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") loginUser();
+  });
+
+  window.onload = async () => {
+    await initDB();
+    populateUserLists();
+
+   const firebaseConfig = {
+  apiKey: "AIzaSyAPl590InCssRC9vgARCDwNvvJ7B8ueD6c",
+  authDomain: "mogroup-dc1df.firebaseapp.com",
+  projectId: "mogroup-dc1df",
+  storageBucket: "mogroup-dc1df.firebasestorage.app",
+  messagingSenderId: "1052293486604",
+  appId: "1:1052293486604:web:fda9174333376491887629"
+};
+
+</script>
+
+</body>
+</html>
