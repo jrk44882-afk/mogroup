@@ -100,6 +100,11 @@
     background-color: var(--brown-dark);
   }
 
+  .btn-main:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   .btn-secondary {
     background-color: var(--bg-latte);
     color: var(--brown-dark);
@@ -475,10 +480,10 @@
       <div class="composer-box">
         <div class="composer-actions">
           <label class="file-label">
-            <span id="label-newspaper">اختر صورة أو ملف للإصدار...</span>
+            <span id="label-newspaper">اختر صورة أو ملف للإصدار (أقل من 700KB)...</span>
             <input type="file" id="file-newspaper" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip" onchange="updateFileLabel('newspaper')">
           </label>
-          <button type="button" class="btn-main" onclick="addPost('newspaper')">نشر الإصدار</button>
+          <button type="button" id="btn-newspaper" class="btn-main" onclick="addPost('newspaper')">نشر الإصدار</button>
         </div>
       </div>
       <div id="grid-newspaper" class="padlet-grid"></div>
@@ -494,10 +499,10 @@
         <textarea id="text-events" placeholder="اكتب تفاصيل الفعالية أو المشاركة هنا..."></textarea>
         <div class="composer-actions">
           <label class="file-label">
-            <span id="label-events">إرفاق صورة / فيديو / ملف</span>
+            <span id="label-events">إرفاق صورة / ملف (أقل من 700KB)</span>
             <input type="file" id="file-events" onchange="updateFileLabel('events')">
           </label>
-          <button type="button" class="btn-main" onclick="addPost('events')">إرسال المشاركة</button>
+          <button type="button" id="btn-events" class="btn-main" onclick="addPost('events')">إرسال المشاركة</button>
         </div>
       </div>
       <div id="grid-events" class="padlet-grid"></div>
@@ -513,10 +518,10 @@
         <textarea id="text-achievements" placeholder="شارك إنجازاً جديداً..."></textarea>
         <div class="composer-actions">
           <label class="file-label">
-            <span id="label-achievements">إرفاق صورة / فيديو / ملف</span>
+            <span id="label-achievements">إرفاق صورة / ملف (أقل من 700KB)</span>
             <input type="file" id="file-achievements" onchange="updateFileLabel('achievements')">
           </label>
-          <button type="button" class="btn-main" onclick="addPost('achievements')">إرسال المشاركة</button>
+          <button type="button" id="btn-achievements" class="btn-main" onclick="addPost('achievements')">إرسال المشاركة</button>
         </div>
       </div>
       <div id="grid-achievements" class="padlet-grid"></div>
@@ -532,10 +537,10 @@
         <textarea id="text-suggestions" placeholder="اكتب اقتراحك هنا..."></textarea>
         <div class="composer-actions">
           <label class="file-label">
-            <span id="label-suggestions">إرفاق صورة / فيديو / ملف</span>
+            <span id="label-suggestions">إرفاق صورة / ملف (أقل من 700KB)</span>
             <input type="file" id="file-suggestions" onchange="updateFileLabel('suggestions')">
           </label>
-          <button type="button" class="btn-main" onclick="addPost('suggestions')">إرسال المشاركة</button>
+          <button type="button" id="btn-suggestions" class="btn-main" onclick="addPost('suggestions')">إرسال المشاركة</button>
         </div>
       </div>
       <div id="grid-suggestions" class="padlet-grid"></div>
@@ -551,10 +556,10 @@
         <textarea id="text-notes" placeholder="اكتب ملاحظتك هنا..."></textarea>
         <div class="composer-actions">
           <label class="file-label">
-            <span id="label-notes">إرفاق صورة / فيديو / ملف</span>
+            <span id="label-notes">إرفاق صورة / ملف (أقل من 700KB)</span>
             <input type="file" id="file-notes" onchange="updateFileLabel('notes')">
           </label>
-          <button type="button" class="btn-main" onclick="addPost('notes')">إرسال المشاركة</button>
+          <button type="button" id="btn-notes" class="btn-main" onclick="addPost('notes')">إرسال المشاركة</button>
         </div>
       </div>
       <div id="grid-notes" class="padlet-grid"></div>
@@ -578,10 +583,10 @@
 
         <div class="composer-actions">
           <label class="file-label">
-            <span id="label-mail">إرفاق صورة / فيديو / ملف</span>
+            <span id="label-mail">إرفاق صورة / ملف (أقل من 700KB)</span>
             <input type="file" id="file-mail" onchange="updateFileLabel('mail')">
           </label>
-          <button type="button" class="btn-main" onclick="sendMail()">إرسال الرسالة</button>
+          <button type="button" id="btn-mail" class="btn-main" onclick="sendMail()">إرسال الرسالة</button>
         </div>
       </div>
 
@@ -591,7 +596,22 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPl590InCssRC9vgARCDwNvvJ7B8ueD6c",
+    authDomain: "mogroup-dc1df.firebaseapp.com",
+    projectId: "mogroup-dc1df",
+    storageBucket: "mogroup-dc1df.firebasestorage.app",
+    messagingSenderId: "1052293486604",
+    appId: "1:1052293486604:web:fda9174333376491887629"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
   const GATE_PASS = "227";
   const USERS = [
     { name: "الأميرة النائمة", pass: "9144" },
@@ -605,36 +625,16 @@
   ];
 
   let currentUser = null;
-  let db = null;
+  let allPosts = [];
+  let allFolders = [];
+  let allMails = [];
+
   const activeFolders = {
     events: "الكل",
     achievements: "الكل",
     suggestions: "الكل",
     notes: "الكل"
   };
-
-  function initDB() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open("MoGroupAlshobaDB", 1);
-      request.onupgradeneeded = (e) => {
-        const database = e.target.result;
-        if (!database.objectStoreNames.contains("posts")) {
-          database.createObjectStore("posts", { keyPath: "id", autoIncrement: true });
-        }
-        if (!database.objectStoreNames.contains("folders")) {
-          database.createObjectStore("folders", { keyPath: "id", autoIncrement: true });
-        }
-        if (!database.objectStoreNames.contains("mails")) {
-          database.createObjectStore("mails", { keyPath: "id", autoIncrement: true });
-        }
-      };
-      request.onsuccess = (e) => {
-        db = e.target.result;
-        resolve(db);
-      };
-      request.onerror = (e) => reject(e);
-    });
-  }
 
   function populateUserLists() {
     const loginSelect = document.getElementById("userSelect");
@@ -652,7 +652,7 @@
     });
   }
 
-  function checkGate() {
+  window.checkGate = function() {
     const val = document.getElementById("gateInput").value.trim();
     if (val === GATE_PASS) {
       localStorage.setItem("gatePassed", "true");
@@ -661,9 +661,9 @@
     } else {
       document.getElementById("gateError").style.display = "block";
     }
-  }
+  };
 
-  function loginUser() {
+  window.loginUser = function() {
     const selectedName = document.getElementById("userSelect").value;
     const enteredPass = document.getElementById("userPassInput").value.trim();
     const userObj = USERS.find(u => u.name === selectedName && u.pass === enteredPass);
@@ -675,46 +675,66 @@
     } else {
       document.getElementById("loginError").style.display = "block";
     }
-  }
+  };
 
-  function logoutUser() {
+  window.logoutUser = function() {
     localStorage.removeItem("savedMember");
     currentUser = null;
     document.getElementById("userPassInput").value = "";
     document.getElementById("loginError").style.display = "none";
     document.getElementById("appScreen").style.display = "none";
     document.getElementById("loginScreen").style.display = "block";
-  }
+  };
 
   function enterApp() {
     document.getElementById("gateScreen").style.display = "none";
     document.getElementById("loginScreen").style.display = "none";
     document.getElementById("appScreen").style.display = "block";
     document.getElementById("currentUserName").textContent = currentUser;
-    renderAll();
+    startRealtimeListeners();
   }
 
-  function switchSection(secId, btn) {
+  function startRealtimeListeners() {
+    onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snapshot) => {
+      allPosts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAllSections();
+    });
+
+    onSnapshot(collection(db, "folders"), (snapshot) => {
+      allFolders = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAllSections();
+    });
+
+    onSnapshot(query(collection(db, "mails"), orderBy("timestamp", "desc")), (snapshot) => {
+      allMails = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderMails();
+    });
+  }
+
+  window.switchSection = function(secId, btn) {
     document.querySelectorAll(".section-container").forEach(s => s.classList.remove("active"));
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
     document.getElementById("sec-" + secId).classList.add("active");
     btn.classList.add("active");
-    if (secId === "mail") renderMails();
-    else renderSection(secId);
-  }
+  };
 
-  function updateFileLabel(sec) {
+  window.updateFileLabel = function(sec) {
     const fileInput = document.getElementById("file-" + sec);
     const labelSpan = document.getElementById("label-" + sec);
     if (fileInput.files.length > 0) {
       labelSpan.textContent = fileInput.files[0].name;
     } else {
-      labelSpan.textContent = sec === "newspaper" ? "اختر صورة أو ملف للإصدار..." : "إرفاق صورة / فيديو / ملف";
+      labelSpan.textContent = sec === "newspaper" ? "اختر صورة أو ملف للإصدار (أقل من 700KB)..." : "إرفاق صورة / ملف (أقل من 700KB)";
     }
-  }
+  };
 
   function readFileAsDataURL(file) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      if (file.size > 750 * 1024) {
+        alert("حجم الملف كبير جداً! يرجى اختيار ملف أو صورة أصغر من 700 كيلوبايت.");
+        reject("File too large");
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => resolve({
         name: file.name,
@@ -725,85 +745,83 @@
     });
   }
 
-  async function addPost(section) {
+  window.addPost = async function(section) {
     const textEl = document.getElementById("text-" + section);
     const fileEl = document.getElementById("file-" + section);
+    const btnEl = document.getElementById("btn-" + section);
     const text = textEl ? textEl.value.trim() : "";
     const file = fileEl.files[0];
 
     if (!text && !file) return;
 
-    let fileData = null;
-    if (file) {
-      fileData = await readFileAsDataURL(file);
-    }
+    btnEl.disabled = true;
+    try {
+      let fileData = null;
+      if (file) {
+        fileData = await readFileAsDataURL(file);
+      }
 
-    const postObj = {
-      section: section,
-      folder: activeFolders[section] || "الكل",
-      author: currentUser,
-      text: text,
-      file: fileData,
-      date: new Date().toLocaleDateString("ar-SA")
-    };
+      await addDoc(collection(db, "posts"), {
+        section: section,
+        folder: activeFolders[section] || "الكل",
+        author: currentUser,
+        text: text,
+        file: fileData,
+        date: new Date().toLocaleDateString("ar-SA"),
+        timestamp: Date.now()
+      });
 
-    const tx = db.transaction("posts", "readwrite");
-    tx.objectStore("posts").add(postObj);
-    tx.oncomplete = () => {
       if (textEl) textEl.value = "";
       fileEl.value = "";
       updateFileLabel(section);
-      renderSection(section);
-    };
-  }
+    } catch (e) {
+      console.error(e);
+    }
+    btnEl.disabled = false;
+  };
 
-  function deletePost(id, section) {
-    const tx = db.transaction("posts", "readwrite");
-    tx.objectStore("posts").delete(id);
-    tx.oncomplete = () => renderSection(section);
-  }
+  window.deletePost = async function(id) {
+    if (confirm("هل أنت متأكد من حذف هذه المشاركة؟")) {
+      await deleteDoc(doc(db, "posts", id));
+    }
+  };
 
-  function createFolder(section) {
+  window.createFolder = async function(section) {
     const folderName = prompt("أدخل اسم المجلد الجديد:");
     if (!folderName || !folderName.trim()) return;
 
-    const tx = db.transaction("folders", "readwrite");
-    tx.objectStore("folders").add({ section: section, name: folderName.trim() });
-    tx.oncomplete = () => {
-      activeFolders[section] = folderName.trim();
-      renderSection(section);
-    };
-  }
+    await addDoc(collection(db, "folders"), {
+      section: section,
+      name: folderName.trim()
+    });
+    activeFolders[section] = folderName.trim();
+  };
 
-  function selectFolder(section, folderName) {
+  window.selectFolder = function(section, folderName) {
     activeFolders[section] = folderName;
     renderSection(section);
-  }
+  };
 
   function renderFolders(section) {
     const container = document.getElementById("folders-" + section);
     if (!container) return;
 
-    const tx = db.transaction("folders", "readonly");
-    const req = tx.objectStore("folders").getAll();
-    req.onsuccess = () => {
-      const list = req.result.filter(f => f.section === section);
-      container.innerHTML = "";
+    const list = allFolders.filter(f => f.section === section);
+    container.innerHTML = "";
 
-      const allChip = document.createElement("div");
-      allChip.className = "folder-chip" + (activeFolders[section] === "الكل" ? " active" : "");
-      allChip.textContent = "الكل";
-      allChip.onclick = () => selectFolder(section, "الكل");
-      container.appendChild(allChip);
+    const allChip = document.createElement("div");
+    allChip.className = "folder-chip" + (activeFolders[section] === "الكل" ? " active" : "");
+    allChip.textContent = "الكل";
+    allChip.onclick = () => selectFolder(section, "الكل");
+    container.appendChild(allChip);
 
-      list.forEach(f => {
-        const chip = document.createElement("div");
-        chip.className = "folder-chip" + (activeFolders[section] === f.name ? " active" : "");
-        chip.textContent = "📁 " + f.name;
-        chip.onclick = () => selectFolder(section, f.name);
-        container.appendChild(chip);
-      });
-    };
+    list.forEach(f => {
+      const chip = document.createElement("div");
+      chip.className = "folder-chip" + (activeFolders[section] === f.name ? " active" : "");
+      chip.textContent = "📁 " + f.name;
+      chip.onclick = () => selectFolder(section, f.name);
+      container.appendChild(chip);
+    });
   }
 
   function buildMediaHTML(file) {
@@ -821,132 +839,119 @@
     if (section !== "newspaper") renderFolders(section);
 
     const grid = document.getElementById("grid-" + section);
-    const tx = db.transaction("posts", "readonly");
-    const req = tx.objectStore("posts").getAll();
+    let posts = allPosts.filter(p => p.section === section);
+    if (section !== "newspaper" && activeFolders[section] !== "الكل") {
+      posts = posts.filter(p => p.folder === activeFolders[section]);
+    }
 
-    req.onsuccess = () => {
-      let posts = req.result.filter(p => p.section === section);
-      if (section !== "newspaper" && activeFolders[section] !== "الكل") {
-        posts = posts.filter(p => p.folder === activeFolders[section]);
-      }
-      posts.reverse();
+    if (posts.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1;">لا توجد مشاركات في هذا القسم حتى الآن.</div>`;
+      return;
+    }
 
-      if (posts.length === 0) {
-        grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1;">لا توجد مشاركات في هذا القسم حتى الآن.</div>`;
-        return;
-      }
-
-      grid.innerHTML = posts.map(p => `
-        <div class="post-card">
-          <div>
-            <div class="post-meta">
-              <span class="author-name">${p.author}</span>
-              <span>${p.folder && p.folder !== "الكل" ? "📁 " + p.folder + " • " : ""}${p.date}</span>
-            </div>
-            ${p.text ? `<p class="post-text">${p.text}</p>` : ""}
-            ${buildMediaHTML(p.file)}
+    grid.innerHTML = posts.map(p => `
+      <div class="post-card">
+        <div>
+          <div class="post-meta">
+            <span class="author-name">${p.author}</span>
+            <span>${p.folder && p.folder !== "الكل" ? "📁 " + p.folder + " • " : ""}${p.date}</span>
           </div>
-          <div style="margin-top: 12px; text-align: left;">
-            <button type="button" class="btn-danger" onclick="deletePost(${p.id}, '${section}')">حذف</button>
-          </div>
+          ${p.text ? `<p class="post-text">${p.text}</p>` : ""}
+          ${buildMediaHTML(p.file)}
         </div>
-      `).join("");
-    };
+        <div style="margin-top: 12px; text-align: left;">
+          <button type="button" class="btn-danger" onclick="deletePost('${p.id}')">حذف</button>
+        </div>
+      </div>
+    `).join("");
   }
 
-  async function sendMail() {
+  function renderAllSections() {
+    ["newspaper", "events", "achievements", "suggestions", "notes"].forEach(renderSection);
+  }
+
+  window.sendMail = async function() {
     const recipient = document.getElementById("mailRecipient").value;
     const textEl = document.getElementById("text-mail");
     const fileEl = document.getElementById("file-mail");
+    const btnEl = document.getElementById("btn-mail");
     const isAnon = document.getElementById("mailAnonymous").checked;
     const text = textEl.value.trim();
     const file = fileEl.files[0];
 
     if (!text && !file) return;
 
-    let fileData = null;
-    if (file) {
-      fileData = await readFileAsDataURL(file);
-    }
+    btnEl.disabled = true;
+    try {
+      let fileData = null;
+      if (file) {
+        fileData = await readFileAsDataURL(file);
+      }
 
-    const mailObj = {
-      sender: currentUser,
-      isAnonymous: isAnon,
-      recipient: recipient,
-      text: text,
-      file: fileData,
-      date: new Date().toLocaleDateString("ar-SA")
-    };
+      await addDoc(collection(db, "mails"), {
+        sender: currentUser,
+        isAnonymous: isAnon,
+        recipient: recipient,
+        text: text,
+        file: fileData,
+        date: new Date().toLocaleDateString("ar-SA"),
+        timestamp: Date.now()
+      });
 
-    const tx = db.transaction("mails", "readwrite");
-    tx.objectStore("mails").add(mailObj);
-    tx.oncomplete = () => {
       textEl.value = "";
       fileEl.value = "";
       document.getElementById("mailAnonymous").checked = false;
       updateFileLabel("mail");
-      renderMails();
-    };
-  }
+    } catch (e) {
+      console.error(e);
+    }
+    btnEl.disabled = false;
+  };
 
-  function deleteMail(id) {
-    const tx = db.transaction("mails", "readwrite");
-    tx.objectStore("mails").delete(id);
-    tx.oncomplete = () => renderMails();
-  }
+  window.deleteMail = async function(id) {
+    if (confirm("هل أنت متأكد من حذف هذه الرسالة؟")) {
+      await deleteDoc(doc(db, "mails", id));
+    }
+  };
 
   function renderMails() {
     const listEl = document.getElementById("mailList");
-    const tx = db.transaction("mails", "readonly");
-    const req = tx.objectStore("mails").getAll();
+    const visibleMails = allMails.filter(m =>
+      m.recipient === "ALL" ||
+      m.recipient === currentUser ||
+      m.sender === currentUser
+    );
 
-    req.onsuccess = () => {
-      const visibleMails = req.result.filter(m =>
-        m.recipient === "ALL" ||
-        m.recipient === currentUser ||
-        m.sender === currentUser
-      ).reverse();
+    if (visibleMails.length === 0) {
+      listEl.innerHTML = `<div class="empty-state">صندوق البريد فارغ حالياً.</div>`;
+      return;
+    }
 
-      if (visibleMails.length === 0) {
-        listEl.innerHTML = `<div class="empty-state">صندوق البريد فارغ حالياً.</div>`;
-        return;
+    listEl.innerHTML = visibleMails.map(m => {
+      const isPublic = m.recipient === "ALL";
+      let senderDisplay = m.sender;
+      if (m.isAnonymous) {
+        senderDisplay = (m.sender === currentUser) ? "مجهول (أنت)" : "مجهول";
       }
 
-      listEl.innerHTML = visibleMails.map(m => {
-        const isPublic = m.recipient === "ALL";
-        let senderDisplay = m.sender;
-        if (m.isAnonymous) {
-          senderDisplay = (m.sender === currentUser) ? "مجهول (أنت)" : "مجهول";
-        }
+      const label = isPublic
+        ? `رسالة عامة من: ${senderDisplay}`
+        : `رسالة خاصة من: ${senderDisplay} ➔ إلى: ${m.recipient}`;
 
-        const label = isPublic
-          ? `رسالة عامة من: ${senderDisplay}`
-          : `رسالة خاصة من: ${senderDisplay} ➔ إلى: ${m.recipient}`;
-
-        return `
-          <div class="mail-item ${isPublic ? "public-mail" : ""}">
-            <div class="post-meta">
-              <span><strong>${label}</strong></span>
-              <span class="badge-type">${isPublic ? "عامة" : "خاصة"} • ${m.date}</span>
-            </div>
-            ${m.text ? `<p class="post-text">${m.text}</p>` : ""}
-            ${buildMediaHTML(m.file)}
-            <div style="margin-top: 10px; text-align: left;">
-              <button type="button" class="btn-danger" onclick="deleteMail(${m.id})">حذف</button>
-            </div>
+      return `
+        <div class="mail-item ${isPublic ? "public-mail" : ""}">
+          <div class="post-meta">
+            <span><strong>${label}</strong></span>
+            <span class="badge-type">${isPublic ? "عامة" : "خاصة"} • ${m.date}</span>
           </div>
-        `;
-      }).join("");
-    };
-  }
-
-  function renderAll() {
-    renderSection("newspaper");
-    renderSection("events");
-    renderSection("achievements");
-    renderSection("suggestions");
-    renderSection("notes");
-    renderMails();
+          ${m.text ? `<p class="post-text">${m.text}</p>` : ""}
+          ${buildMediaHTML(m.file)}
+          <div style="margin-top: 10px; text-align: left;">
+            <button type="button" class="btn-danger" onclick="deleteMail('${m.id}')">حذف</button>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
   document.getElementById("gateInput").addEventListener("keypress", (e) => {
@@ -957,19 +962,17 @@
     if (e.key === "Enter") loginUser();
   });
 
-  window.onload = async () => {
-    await initDB();
-    populateUserLists();
+  populateUserLists();
+  const gatePassed = localStorage.getItem("gatePassed");
+  const savedMember = localStorage.getItem("savedMember");
 
-   const firebaseConfig = {
-  apiKey: "AIzaSyAPl590InCssRC9vgARCDwNvvJ7B8ueD6c",
-  authDomain: "mogroup-dc1df.firebaseapp.com",
-  projectId: "mogroup-dc1df",
-  storageBucket: "mogroup-dc1df.firebasestorage.app",
-  messagingSenderId: "1052293486604",
-  appId: "1:1052293486604:web:fda9174333376491887629"
-};
-
+  if (savedMember && USERS.some(u => u.name === savedMember)) {
+    currentUser = savedMember;
+    enterApp();
+  } else if (gatePassed === "true") {
+    document.getElementById("gateScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display = "block";
+  }
 </script>
 
 </body>
